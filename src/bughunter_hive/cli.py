@@ -8,6 +8,7 @@ from pathlib import Path
 from .bootstrap import install_repo_skills
 from .browser_review import review_browser_validation
 from .browser_validator import run_browser_validation
+from .disclosure import generate_disclosure_drafts
 from .killswitch import KillSwitch, KillSwitchEngaged
 from .knowledge import register_source
 from .orchestrator import run_orchestrator_from_manifest
@@ -15,6 +16,7 @@ from .planning import build_campaign_plan
 from .programs import load_program_profile, write_program_profile
 from .recon import run_recon
 from .report_mining import mine_report
+from .triage import triage_review_candidates
 from .validation import build_validation_bundle
 from .validator_runner import execute_validation_bundle
 
@@ -101,6 +103,15 @@ def build_parser() -> argparse.ArgumentParser:
     browser_review = sub.add_parser("browser-review", help="review browser artifacts and generate finding candidates")
     browser_review.add_argument("--run", required=True)
     browser_review.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+
+    triage = sub.add_parser("triage", help="rank and deduplicate browser review candidates")
+    triage.add_argument("--review", required=True)
+    triage.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+
+    disclosure = sub.add_parser("draft-disclosures", help="generate disclosure drafts from triage output")
+    disclosure.add_argument("--triage", required=True)
+    disclosure.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+    disclosure.add_argument("--max-drafts", type=int, default=5)
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -246,6 +257,25 @@ def main(argv: list[str] | None = None) -> int:
                 repo_root=repo_root,
                 browser_validation_path=Path(args.run),
                 audit_log_path=Path(args.audit_log),
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "triage":
+            result_path = triage_review_candidates(
+                repo_root=repo_root,
+                review_path=Path(args.review),
+                audit_log_path=Path(args.audit_log),
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "draft-disclosures":
+            result_path = generate_disclosure_drafts(
+                repo_root=repo_root,
+                triage_path=Path(args.triage),
+                audit_log_path=Path(args.audit_log),
+                max_drafts=args.max_drafts,
             )
             _print({"result_path": str(result_path)})
             return 0

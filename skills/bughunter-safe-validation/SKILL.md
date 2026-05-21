@@ -25,3 +25,9 @@ Phase 5 helper:
 ```bash
 python -m bughunter_hive.cli browser-review --run audit/browser-validation-runs/<program>-phase4-browser-validation.json
 ```
+
+Phase 6 helpers:
+```bash
+python -m bughunter_hive.cli triage --review audit/review-candidates/<program>-phase5-review.json
+python -m bughunter_hive.cli draft-disclosures --triage audit/triage/<program>-phase6-triage.json
+```

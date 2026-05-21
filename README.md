@@ -39,6 +39,11 @@ Phase 5 adds browser artifact review:
 - mapping of login forms, callback params, DOM sinks, and wallet/signature cues
 - review bundle ready for human triage or later agent ranking
 
+Phase 6 adds triage + disclosure drafting:
+- ranking and deduplication of finding candidates
+- severity scoring across candidate clusters
+- disclosure draft generation for review-ready issues
+
 ## Quickstart
 
 ```bash
@@ -64,6 +69,8 @@ python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-progr
 python -m bughunter_hive.cli validate-run --bundle audit/validation/example-hybrid-program-phase2-validation.json
 python -m bughunter_hive.cli browser-validate --run audit/validation-runs/example-hybrid-program-phase3-validation-run.json
 python -m bughunter_hive.cli browser-review --run audit/browser-validation-runs/example-hybrid-program-phase4-browser-validation.json
+python -m bughunter_hive.cli triage --review audit/review-candidates/example-hybrid-program-phase5-review.json
+python -m bughunter_hive.cli draft-disclosures --triage audit/triage/example-hybrid-program-phase6-triage.json
 pytest
 ```
 
@@ -101,3 +108,5 @@ pytest
 - `validate-run` — execute a safe validation bundle and emit artifacts
 - `browser-validate` — capture screenshot and DOM artifacts from a Phase 3 run
 - `browser-review` — review browser artifacts and emit finding candidates
+- `triage` — rank and deduplicate browser review candidates
+- `draft-disclosures` — generate disclosure drafts from triaged findings

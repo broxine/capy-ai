@@ -16,6 +16,8 @@ Acceptance target for Phase 4: add browser-native evidence capture to the valida
 
 Acceptance target for Phase 5: review the browser evidence itself and turn it into concrete finding candidates with next-safe-step guidance.
 
+Acceptance target for Phase 6: triage those candidates into ranked findings, deduplicate overlaps, and emit disclosure drafts that are close to operator-ready.
+
 ## Org chart
 
 ```text
@@ -170,3 +172,16 @@ It is intentionally passive and produces signals, not destructive actions.
 - callback parameter candidates
 - DOM sink / postMessage candidates
 - wallet/signature candidates
+
+## Phase 6 shipped components
+
+`bughunter_hive.triage` ranks and deduplicates browser-review output:
+- cluster-level grouping
+- score + severity assignment
+- disclosure-ready flag
+
+`bughunter_hive.disclosure` converts triaged findings into draft reports:
+- summary
+- evidence references
+- safe reproduction outline
+- impact hypothesis
