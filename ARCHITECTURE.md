@@ -8,6 +8,8 @@ Acceptance target for Phase 0: a repository scaffold that can host Hermes-based 
 
 Acceptance target for Phase 1: convert the scaffold into a usable pre-execution pipeline that can profile a public program, mine prior reports into persistent findings, rank hypotheses, and hand off a safe campaign plan to execution workers.
 
+Acceptance target for Phase 2: provide a single end-to-end orchestrator entry point that runs the safe pre-execution workflow from a manifest and emits durable run bundles for Hermes or humans to consume.
+
 ## Org chart
 
 ```text
@@ -40,6 +42,7 @@ CEO Orchestrator
 - Owns decomposition, prioritization, delegation, and stop/go decisions.
 - Uses caveman handoffs for terse child summaries.
 - Never performs live exploitation without explicit approval state from the human.
+- Phase 2 implementation surface: `orchestrate`.
 
 ### RnD
 - Mines public reports, audit contests, docs, changelogs, prior disclosures, and protocol design material.
@@ -121,3 +124,12 @@ It is intentionally passive and produces signals, not destructive actions.
 - `bughunter_hive.report_mining` ingests public writeups into `knowledge/raw/` plus synthesized findings pages.
 - `bughunter_hive.planning` ranks first-pass hypotheses from a curated taxonomy spanning Web2 and Web3 bug classes.
 - `audit/plans/` stores machine-readable plan artifacts for the orchestrator.
+
+## Phase 2 shipped component
+
+`bughunter_hive.orchestrator` consumes a JSON manifest and executes the full safe preparation chain:
+- program profile creation
+- public report mining
+- ranked campaign plan generation
+- passive recon over declared targets
+- durable run bundle with team-by-team caveman handoffs

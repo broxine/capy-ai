@@ -1,0 +1,23 @@
+{
+  "program": {
+    "name": "Example Hybrid Program",
+    "platform": "hybrid",
+    "program_url": "https://hackerone.com/example",
+    "scope_domains": ["example.com"],
+    "assets": ["public-api", "oauth-callback", "wallet-ui"],
+    "exclusions": ["live exploit on production"],
+    "tags": ["oauth", "api", "wallet"],
+    "notes": ["inspect callback binding and typed-data trust"]
+  },
+  "reports": [
+    {
+      "source": "./sample-report.md",
+      "title": "Sample OAuth report",
+      "kind": "report",
+      "reference_url": "https://example.com/report"
+    }
+  ],
+  "recon_targets": ["https://example.com"],
+  "plan_limit": 3,
+  "recon_timeout": 10
+}

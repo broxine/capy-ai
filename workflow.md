@@ -65,3 +65,11 @@ python -m bughunter_hive.cli report-mine --source /path/to/report.md --title "Pr
 python -m bughunter_hive.cli campaign-plan --program target-name
 python -m bughunter_hive.cli recon --target https://app.target.tld --program target-name --scope-domain target.tld
 ```
+
+## Phase 2 orchestrated command
+
+```bash
+python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.json
+```
+
+The manifest-driven run is still constrained to safe operations. It composes the same internal modules used in Phase 1, then writes a run bundle into `audit/runs/` and a markdown handoff page into `knowledge/wiki/playbooks/`.

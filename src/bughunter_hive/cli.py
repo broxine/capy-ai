@@ -8,6 +8,7 @@ from pathlib import Path
 from .bootstrap import install_repo_skills
 from .killswitch import KillSwitch, KillSwitchEngaged
 from .knowledge import register_source
+from .orchestrator import run_orchestrator_from_manifest
 from .planning import build_campaign_plan
 from .programs import load_program_profile, write_program_profile
 from .recon import run_recon
@@ -70,6 +71,11 @@ def build_parser() -> argparse.ArgumentParser:
     plan = sub.add_parser("campaign-plan", help="build a ranked Phase 1 hypothesis plan")
     plan.add_argument("--program", required=True, help="program slug or json path")
     plan.add_argument("--limit", type=int, default=5)
+
+    orchestrate = sub.add_parser("orchestrate", help="run the Phase 2 end-to-end safe workflow from a manifest")
+    orchestrate.add_argument("--manifest", required=True)
+    orchestrate.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+    orchestrate.add_argument("--kill-switch", default=str(_repo_root() / "runtime" / "kill-switch.flag"))
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -166,6 +172,16 @@ def main(argv: list[str] | None = None) -> int:
                     "hypotheses": [item.__dict__ for item in plan.hypotheses],
                 }
             )
+            return 0
+
+        if args.command == "orchestrate":
+            run_path = run_orchestrator_from_manifest(
+                repo_root=repo_root,
+                manifest_path=Path(args.manifest),
+                audit_log_path=Path(args.audit_log),
+                kill_switch_path=Path(args.kill_switch),
+            )
+            _print({"run_path": str(run_path)})
             return 0
 
         if args.command == "bootstrap":

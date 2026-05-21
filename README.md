@@ -17,6 +17,12 @@ Phase 1 adds an actual hunt-prep pipeline:
 - ranked campaign planning using a Web2/Web3 bug-class taxonomy
 - audit plan artifacts for orchestrator handoff
 
+Phase 2 adds an end-to-end safe orchestrator workflow:
+- JSON manifest-driven run orchestration
+- one command that chains program profile → report mining → campaign plan → passive recon
+- run bundle output with per-team caveman handoffs for Hermes consumption
+- reusable example manifest in `examples/phase2-manifest.json`
+
 ## Quickstart
 
 ```bash
@@ -37,6 +43,7 @@ python -m bughunter_hive.cli recon \
   --target https://example.com \
   --program demo \
   --scope-domain example.com
+python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.json
 pytest
 ```
 
@@ -69,3 +76,4 @@ pytest
 - `report-mine` — ingest a public report into the persistent KB
 - `campaign-plan` — rank first-pass hypotheses for a target program
 - `recon` — run passive HTTP recon for one target
+- `orchestrate` — run the Phase 2 end-to-end safe workflow from a manifest
