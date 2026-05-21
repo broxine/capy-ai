@@ -1,0 +1,2 @@
+- Focus review on safety regressions, accidental live-action capability, and audit gaps.
+- Ignore stylistic markdown churn unless it changes operating doctrine.

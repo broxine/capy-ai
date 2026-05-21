@@ -1,0 +1,3 @@
+- Use Python 3.11+ stdlib where possible.
+- Keep the recon worker passive by default.
+- Add tests for policy and execution behavior when changing runtime code.

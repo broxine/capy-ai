@@ -1,0 +1,3 @@
+- Repo is a Hermes-based bug hunting scaffold, currently Python-only and intentionally lightweight.
+- Keep edits aligned with `ARCHITECTURE.md`, `workflow.md`, and `knowledge/SCHEMA.md`.
+- Safety controls are load-bearing: scope guard, audit log, kill switch.

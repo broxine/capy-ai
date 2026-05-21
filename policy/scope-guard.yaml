@@ -1,0 +1,6 @@
+mode: semi-auto
+default_action_class: passive_recon
+live_exploit_requires_human_approval: true
+block_private_targets_by_default: true
+enforce_declared_scope_domains: true
+audit_every_action: true
