@@ -57,6 +57,7 @@ CEO Orchestrator
 ### Execution
 - Performs passive recon, non-destructive validation, artifact capture, and reproducible evidence generation.
 - Recon Scout is the first runnable worker in this phase.
+- Validator planning now converts orchestrator output into concrete safe-check bundles before any live action.
 
 ### Knowledge
 - Maintains a persistent wiki instead of one-shot RAG.
@@ -133,3 +134,9 @@ It is intentionally passive and produces signals, not destructive actions.
 - ranked campaign plan generation
 - passive recon over declared targets
 - durable run bundle with team-by-team caveman handoffs
+
+`bughunter_hive.validation` converts the run bundle into safe validator tasks:
+- objective per top hypothesis
+- evidence inputs and artifact checklist
+- safety notes preserving semi-auto boundaries
+- caveman handoff for the Execution team

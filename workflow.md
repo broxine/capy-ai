@@ -70,6 +70,9 @@ python -m bughunter_hive.cli recon --target https://app.target.tld --program tar
 
 ```bash
 python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.json
+python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-program-phase2-run.json
 ```
 
 The manifest-driven run is still constrained to safe operations. It composes the same internal modules used in Phase 1, then writes a run bundle into `audit/runs/` and a markdown handoff page into `knowledge/wiki/playbooks/`.
+
+The validation bundle turns the Phase 2 run into the next Execution queue without crossing into live exploit behavior.

@@ -87,3 +87,18 @@ BUG_CLASSES: tuple[BugClass, ...] = (
         ),
     ),
 )
+
+
+def get_bug_class_by_id(bug_class_id: str) -> BugClass | None:
+    for bug_class in BUG_CLASSES:
+        if bug_class.id == bug_class_id:
+            return bug_class
+    return None
+
+
+def get_bug_class_by_name(name: str) -> BugClass | None:
+    normalized = name.strip().lower()
+    for bug_class in BUG_CLASSES:
+        if bug_class.name.lower() == normalized:
+            return bug_class
+    return None

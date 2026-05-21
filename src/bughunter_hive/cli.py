@@ -13,6 +13,7 @@ from .planning import build_campaign_plan
 from .programs import load_program_profile, write_program_profile
 from .recon import run_recon
 from .report_mining import mine_report
+from .validation import build_validation_bundle
 
 
 def _repo_root() -> Path:
@@ -76,6 +77,10 @@ def build_parser() -> argparse.ArgumentParser:
     orchestrate.add_argument("--manifest", required=True)
     orchestrate.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
     orchestrate.add_argument("--kill-switch", default=str(_repo_root() / "runtime" / "kill-switch.flag"))
+
+    validate = sub.add_parser("validate-plan", help="build a safe validation bundle from an orchestrator run")
+    validate.add_argument("--run", required=True)
+    validate.add_argument("--max-tasks", type=int, default=3)
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -182,6 +187,15 @@ def main(argv: list[str] | None = None) -> int:
                 kill_switch_path=Path(args.kill_switch),
             )
             _print({"run_path": str(run_path)})
+            return 0
+
+        if args.command == "validate-plan":
+            bundle_path = build_validation_bundle(
+                repo_root=repo_root,
+                run_path=Path(args.run),
+                max_tasks=args.max_tasks,
+            )
+            _print({"bundle_path": str(bundle_path)})
             return 0
 
         if args.command == "bootstrap":

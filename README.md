@@ -22,6 +22,7 @@ Phase 2 adds an end-to-end safe orchestrator workflow:
 - one command that chains program profile → report mining → campaign plan → passive recon
 - run bundle output with per-team caveman handoffs for Hermes consumption
 - reusable example manifest in `examples/phase2-manifest.json`
+- validator planning that turns an orchestrator run into safe execution tasks
 
 ## Quickstart
 
@@ -44,6 +45,7 @@ python -m bughunter_hive.cli recon \
   --program demo \
   --scope-domain example.com
 python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.json
+python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-program-phase2-run.json
 pytest
 ```
 
@@ -77,3 +79,4 @@ pytest
 - `campaign-plan` — rank first-pass hypotheses for a target program
 - `recon` — run passive HTTP recon for one target
 - `orchestrate` — run the Phase 2 end-to-end safe workflow from a manifest
+- `validate-plan` — convert a Phase 2 run bundle into safe validation tasks

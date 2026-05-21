@@ -5,3 +5,8 @@ Validate without damage:
 - capture replay steps
 - stop when proof is sufficient
 - record false positives aggressively
+
+Phase 2 helper:
+```bash
+python -m bughunter_hive.cli validate-plan --run audit/runs/<program>-phase2-run.json
+```
