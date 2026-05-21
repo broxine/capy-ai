@@ -29,6 +29,11 @@ Phase 3 adds a semi-automatic validator runner:
 - writes request traces and analyst notes as concrete artifacts
 - emits a Phase 3 validation run bundle for the Execution team
 
+Phase 4 adds browser-backed validation:
+- headless Chrome screenshot capture
+- DOM dump artifacts for real page review
+- browser observation bundle layered on top of Phase 3 execution
+
 ## Quickstart
 
 ```bash
@@ -52,6 +57,7 @@ python -m bughunter_hive.cli recon \
 python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.json
 python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-program-phase2-run.json
 python -m bughunter_hive.cli validate-run --bundle audit/validation/example-hybrid-program-phase2-validation.json
+python -m bughunter_hive.cli browser-validate --run audit/validation-runs/example-hybrid-program-phase3-validation-run.json
 pytest
 ```
 
@@ -87,3 +93,4 @@ pytest
 - `orchestrate` — run the Phase 2 end-to-end safe workflow from a manifest
 - `validate-plan` — convert a Phase 2 run bundle into safe validation tasks
 - `validate-run` — execute a safe validation bundle and emit artifacts
+- `browser-validate` — capture screenshot and DOM artifacts from a Phase 3 run

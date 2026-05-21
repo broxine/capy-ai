@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from .bootstrap import install_repo_skills
+from .browser_validator import run_browser_validation
 from .killswitch import KillSwitch, KillSwitchEngaged
 from .knowledge import register_source
 from .orchestrator import run_orchestrator_from_manifest
@@ -89,6 +90,12 @@ def build_parser() -> argparse.ArgumentParser:
     execute_validate.add_argument("--kill-switch", default=str(_repo_root() / "runtime" / "kill-switch.flag"))
     execute_validate.add_argument("--timeout", type=int, default=10)
     execute_validate.add_argument("--allow-private", action="store_true")
+
+    browser_validate = sub.add_parser("browser-validate", help="capture screenshot and DOM artifacts from a Phase 3 validation run")
+    browser_validate.add_argument("--run", required=True)
+    browser_validate.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+    browser_validate.add_argument("--kill-switch", default=str(_repo_root() / "runtime" / "kill-switch.flag"))
+    browser_validate.add_argument("--timeout", type=int, default=15)
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -213,6 +220,17 @@ def main(argv: list[str] | None = None) -> int:
                 audit_log_path=Path(args.audit_log),
                 kill_switch_path=Path(args.kill_switch),
                 allow_private_targets=args.allow_private,
+                timeout=args.timeout,
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "browser-validate":
+            result_path = run_browser_validation(
+                repo_root=repo_root,
+                validation_run_path=Path(args.run),
+                audit_log_path=Path(args.audit_log),
+                kill_switch_path=Path(args.kill_switch),
                 timeout=args.timeout,
             )
             _print({"result_path": str(result_path)})

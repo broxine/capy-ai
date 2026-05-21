@@ -12,6 +12,8 @@ Acceptance target for Phase 2: provide a single end-to-end orchestrator entry po
 
 Acceptance target for Phase 3: execute the safe validation bundle itself, producing request traces, analyst notes, and execution summaries while staying inside the semi-auto safety boundary.
 
+Acceptance target for Phase 4: add browser-native evidence capture to the validation lane so Execution can review real screenshots and DOM artifacts before any stronger testing.
+
 ## Org chart
 
 ```text
@@ -150,3 +152,11 @@ It is intentionally passive and produces signals, not destructive actions.
 - extracts lightweight HTML and header observations
 - writes `.http` request traces and markdown notes
 - emits a machine-readable execution bundle plus markdown playbook
+
+## Phase 4 shipped component
+
+`bughunter_hive.browser_validator` extends the validation lane with headless browser capture:
+- PNG screenshots
+- dumped DOM snapshots
+- browser-derived observations for login/forms/scripts keywords
+- machine-readable browser validation bundle plus markdown playbook
