@@ -15,6 +15,7 @@ class ValidationTask:
     title: str
     bug_class_id: str
     objective: str
+    target_urls: list[str]
     evidence_inputs: list[str]
     safe_checks: list[str]
     suggested_artifacts: list[str]
@@ -37,6 +38,7 @@ def build_validation_bundle(repo_root: Path, run_path: Path, max_tasks: int = 3)
     top_hypotheses = run_payload.get("top_hypotheses", [])[:max_tasks]
     recon_reports = run_payload.get("recon_reports", [])
     finding_pages = run_payload.get("finding_pages", [])
+    target_urls = _target_urls_from_recon_reports(repo_root, recon_reports)
 
     tasks: list[ValidationTask] = []
     for index, title in enumerate(top_hypotheses, start=1):
@@ -49,6 +51,7 @@ def build_validation_bundle(repo_root: Path, run_path: Path, max_tasks: int = 3)
                 title=bug_class.name,
                 bug_class_id=bug_class.id,
                 objective=_objective(profile, bug_class),
+                target_urls=target_urls,
                 evidence_inputs=_evidence_inputs(profile, recon_reports, finding_pages),
                 safe_checks=list(bug_class.safe_checks),
                 suggested_artifacts=_suggested_artifacts(profile, bug_class),
@@ -82,6 +85,19 @@ def _objective(profile: ProgramProfile, bug_class: BugClass) -> str:
 def _evidence_inputs(profile: ProgramProfile, recon_reports: list[str], finding_pages: list[str]) -> list[str]:
     inputs = [f"knowledge/programs/{profile.slug}.json", *recon_reports, *finding_pages]
     return [item for item in inputs if item]
+
+
+def _target_urls_from_recon_reports(repo_root: Path, recon_reports: list[str]) -> list[str]:
+    urls: list[str] = []
+    for report_path in recon_reports:
+        path = repo_root / report_path
+        if not path.exists():
+            continue
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        target = payload.get("target")
+        if target:
+            urls.append(target)
+    return urls
 
 
 def _suggested_artifacts(profile: ProgramProfile, bug_class: BugClass) -> list[str]:
@@ -136,6 +152,7 @@ def _render_bundle_markdown(bundle: ValidationBundle) -> str:
                 "",
                 f"- bug-class-id: `{task.bug_class_id}`",
                 f"- objective: {task.objective}",
+                f"- target-urls: {', '.join(task.target_urls) if task.target_urls else 'none'}",
                 "",
                 "### Evidence inputs",
                 *evidence_lines,

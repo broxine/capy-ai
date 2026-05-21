@@ -10,6 +10,8 @@ Acceptance target for Phase 1: convert the scaffold into a usable pre-execution 
 
 Acceptance target for Phase 2: provide a single end-to-end orchestrator entry point that runs the safe pre-execution workflow from a manifest and emits durable run bundles for Hermes or humans to consume.
 
+Acceptance target for Phase 3: execute the safe validation bundle itself, producing request traces, analyst notes, and execution summaries while staying inside the semi-auto safety boundary.
+
 ## Org chart
 
 ```text
@@ -140,3 +142,11 @@ It is intentionally passive and produces signals, not destructive actions.
 - evidence inputs and artifact checklist
 - safety notes preserving semi-auto boundaries
 - caveman handoff for the Execution team
+
+## Phase 3 shipped component
+
+`bughunter_hive.validator_runner` executes the validation bundle without live exploit behavior:
+- fetches declared targets with read-only requests
+- extracts lightweight HTML and header observations
+- writes `.http` request traces and markdown notes
+- emits a machine-readable execution bundle plus markdown playbook

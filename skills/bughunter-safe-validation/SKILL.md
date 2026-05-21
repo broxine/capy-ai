@@ -10,3 +10,8 @@ Phase 2 helper:
 ```bash
 python -m bughunter_hive.cli validate-plan --run audit/runs/<program>-phase2-run.json
 ```
+
+Phase 3 helper:
+```bash
+python -m bughunter_hive.cli validate-run --bundle audit/validation/<program>-phase2-validation.json
+```

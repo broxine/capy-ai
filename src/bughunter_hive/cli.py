@@ -14,6 +14,7 @@ from .programs import load_program_profile, write_program_profile
 from .recon import run_recon
 from .report_mining import mine_report
 from .validation import build_validation_bundle
+from .validator_runner import execute_validation_bundle
 
 
 def _repo_root() -> Path:
@@ -81,6 +82,13 @@ def build_parser() -> argparse.ArgumentParser:
     validate = sub.add_parser("validate-plan", help="build a safe validation bundle from an orchestrator run")
     validate.add_argument("--run", required=True)
     validate.add_argument("--max-tasks", type=int, default=3)
+
+    execute_validate = sub.add_parser("validate-run", help="execute a safe validation bundle and write artifacts")
+    execute_validate.add_argument("--bundle", required=True)
+    execute_validate.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+    execute_validate.add_argument("--kill-switch", default=str(_repo_root() / "runtime" / "kill-switch.flag"))
+    execute_validate.add_argument("--timeout", type=int, default=10)
+    execute_validate.add_argument("--allow-private", action="store_true")
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -196,6 +204,18 @@ def main(argv: list[str] | None = None) -> int:
                 max_tasks=args.max_tasks,
             )
             _print({"bundle_path": str(bundle_path)})
+            return 0
+
+        if args.command == "validate-run":
+            result_path = execute_validation_bundle(
+                repo_root=repo_root,
+                bundle_path=Path(args.bundle),
+                audit_log_path=Path(args.audit_log),
+                kill_switch_path=Path(args.kill_switch),
+                allow_private_targets=args.allow_private,
+                timeout=args.timeout,
+            )
+            _print({"result_path": str(result_path)})
             return 0
 
         if args.command == "bootstrap":

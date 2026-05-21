@@ -24,6 +24,11 @@ Phase 2 adds an end-to-end safe orchestrator workflow:
 - reusable example manifest in `examples/phase2-manifest.json`
 - validator planning that turns an orchestrator run into safe execution tasks
 
+Phase 3 adds a semi-automatic validator runner:
+- reads a validation bundle and executes only reversible HTTP/browser-safe observations
+- writes request traces and analyst notes as concrete artifacts
+- emits a Phase 3 validation run bundle for the Execution team
+
 ## Quickstart
 
 ```bash
@@ -46,6 +51,7 @@ python -m bughunter_hive.cli recon \
   --scope-domain example.com
 python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.json
 python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-program-phase2-run.json
+python -m bughunter_hive.cli validate-run --bundle audit/validation/example-hybrid-program-phase2-validation.json
 pytest
 ```
 
@@ -80,3 +86,4 @@ pytest
 - `recon` — run passive HTTP recon for one target
 - `orchestrate` — run the Phase 2 end-to-end safe workflow from a manifest
 - `validate-plan` — convert a Phase 2 run bundle into safe validation tasks
+- `validate-run` — execute a safe validation bundle and emit artifacts
