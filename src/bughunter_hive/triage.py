@@ -5,33 +5,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .audit import AuditLogger, utc_now
-
-
-CATEGORY_CLUSTER = {
-    "login-surface": "auth-session",
-    "callback-parameter": "auth-session",
-    "dom-sink": "client-injection",
-    "wallet-signature": "wallet-signature",
-}
-
-CATEGORY_WEIGHT = {
-    "login-surface": 4,
-    "callback-parameter": 5,
-    "dom-sink": 6,
-    "wallet-signature": 6,
-}
-
-CONFIDENCE_WEIGHT = {
-    "low": 2,
-    "medium": 4,
-    "high": 6,
-}
-
-SEVERITY_THRESHOLDS = (
-    (12, "high"),
-    (8, "medium"),
-    (0, "low"),
-)
+from .scoring_policy import ScoringPolicy, load_scoring_policy
 
 
 @dataclass
@@ -68,21 +42,22 @@ def triage_review_candidates(
 ) -> Path:
     payload = json.loads(review_path.read_text(encoding="utf-8"))
     program_slug = payload["program_slug"]
+    policy = load_scoring_policy(repo_root)
     audit = AuditLogger(audit_log_path)
     audit.log("triage.started", {"program_slug": program_slug, "review_path": str(review_path)})
 
     grouped: dict[tuple[str, str], list[dict]] = {}
     for candidate in payload.get("candidates", []):
-        cluster = CATEGORY_CLUSTER.get(candidate["category"], candidate["category"])
+        cluster = policy.category_cluster.get(candidate["category"], candidate["category"])
         key = (candidate["target_url"], cluster)
         grouped.setdefault(key, []).append(candidate)
 
     findings: list[TriageFinding] = []
     for (target_url, cluster), candidates in grouped.items():
-        scores = [_score_candidate(item) for item in candidates]
+        scores = [_score_candidate(item, policy) for item in candidates]
         score = max(scores) + max(0, len(candidates) - 1) * 2
-        severity = _severity(score)
-        confidence = _confidence(candidates)
+        severity = _severity(score, policy)
+        confidence = _confidence(candidates, policy)
         categories = sorted({item["category"] for item in candidates})
         evidence_paths = _unique(item for candidate in candidates for item in candidate.get("evidence_paths", []))
         rationale = " ".join(item["rationale"] for item in candidates)
@@ -137,20 +112,19 @@ def triage_review_candidates(
     return output_path
 
 
-def _score_candidate(candidate: dict) -> int:
-    return CATEGORY_WEIGHT.get(candidate["category"], 3) + CONFIDENCE_WEIGHT.get(candidate["confidence"], 2)
+def _score_candidate(candidate: dict, policy: ScoringPolicy) -> int:
+    return policy.category_weight.get(candidate["category"], 3) + policy.confidence_weight.get(candidate["confidence"], 2)
 
 
-def _severity(score: int) -> str:
-    for threshold, label in SEVERITY_THRESHOLDS:
+def _severity(score: int, policy: ScoringPolicy) -> str:
+    for threshold, label in policy.severity_thresholds:
         if score >= threshold:
             return label
     return "low"
 
 
-def _confidence(candidates: list[dict]) -> str:
-    weights = {"low": 0, "medium": 1, "high": 2}
-    highest = max(candidates, key=lambda item: weights.get(item["confidence"], 0))["confidence"]
+def _confidence(candidates: list[dict], policy: ScoringPolicy) -> str:
+    highest = max(candidates, key=lambda item: policy.confidence_weight.get(item["confidence"], 0))["confidence"]
     return highest
 
 

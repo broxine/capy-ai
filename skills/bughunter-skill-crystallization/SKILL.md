@@ -10,3 +10,8 @@ Phase 7 learning helpers:
 python -m bughunter_hive.cli feedback-template --triage audit/triage/<program>-phase6-triage.json
 python -m bughunter_hive.cli learn --triage audit/triage/<program>-phase6-triage.json --feedback audit/feedback-templates/<program>-phase7-feedback-template.json
 ```
+
+Phase 8 autopatch helper:
+```bash
+python -m bughunter_hive.cli autopatch-plan --learning audit/learning/<program>-phase7-learning.json
+```

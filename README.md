@@ -49,6 +49,11 @@ Phase 7 adds the learning loop:
 - outcome ingestion for confirmed / false-positive / weak-signal verdicts
 - skill and taxonomy recommendations derived from historical outcomes
 
+Phase 8 adds autopatch planning:
+- learning recommendations become concrete scoring-policy patch proposals
+- skill-touch suggestions are emitted alongside config changes
+- proposed config snapshot is generated without mutating production defaults
+
 ## Quickstart
 
 ```bash
@@ -78,6 +83,7 @@ python -m bughunter_hive.cli triage --review audit/review-candidates/example-hyb
 python -m bughunter_hive.cli draft-disclosures --triage audit/triage/example-hybrid-program-phase6-triage.json
 python -m bughunter_hive.cli feedback-template --triage audit/triage/example-hybrid-program-phase6-triage.json
 python -m bughunter_hive.cli learn --triage audit/triage/example-hybrid-program-phase6-triage.json --feedback audit/feedback-templates/example-hybrid-program-phase7-feedback-template.json
+python -m bughunter_hive.cli autopatch-plan --learning audit/learning/example-hybrid-program-phase7-learning.json
 pytest
 ```
 
@@ -119,3 +125,4 @@ pytest
 - `draft-disclosures` — generate disclosure drafts from triaged findings
 - `feedback-template` — generate verdict template from triaged findings
 - `learn` — ingest outcomes and emit learning recommendations
+- `autopatch-plan` — turn learning recommendations into config/skill patch proposals

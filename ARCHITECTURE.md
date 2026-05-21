@@ -20,6 +20,8 @@ Acceptance target for Phase 6: triage those candidates into ranked findings, ded
 
 Acceptance target for Phase 7: close the loop by recording outcomes and translating them into recommendations that affect future skills and prioritization.
 
+Acceptance target for Phase 8: convert those recommendations into explicit patch plans so the system can evolve under control instead of by hand-wavy intention.
+
 ## Org chart
 
 ```text
@@ -195,3 +197,10 @@ It is intentionally passive and produces signals, not destructive actions.
 - outcome ledger in the knowledge layer
 - cluster stats over time
 - skill and taxonomy recommendations from historical performance
+
+## Phase 8 shipped component
+
+`bughunter_hive.autopatch` turns learning into actionable change proposals:
+- scoring-policy patch suggestions
+- proposed scoring config snapshot
+- skill-touch suggestions mapped to cluster outcomes

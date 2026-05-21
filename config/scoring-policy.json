@@ -1,0 +1,24 @@
+{
+  "category_cluster": {
+    "login-surface": "auth-session",
+    "callback-parameter": "auth-session",
+    "dom-sink": "client-injection",
+    "wallet-signature": "wallet-signature"
+  },
+  "category_weight": {
+    "login-surface": 4,
+    "callback-parameter": 5,
+    "dom-sink": 6,
+    "wallet-signature": 6
+  },
+  "confidence_weight": {
+    "low": 2,
+    "medium": 4,
+    "high": 6
+  },
+  "severity_thresholds": [
+    [12, "high"],
+    [8, "medium"],
+    [0, "low"]
+  ]
+}

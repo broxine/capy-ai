@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 
+from .autopatch import plan_autopatches
 from .bootstrap import install_repo_skills
 from .browser_review import review_browser_validation
 from .browser_validator import run_browser_validation
@@ -121,6 +122,10 @@ def build_parser() -> argparse.ArgumentParser:
     learn.add_argument("--triage", required=True)
     learn.add_argument("--feedback", required=True)
     learn.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
+
+    autopatch = sub.add_parser("autopatch-plan", help="translate learning recommendations into patch proposals")
+    autopatch.add_argument("--learning", required=True)
+    autopatch.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -302,6 +307,15 @@ def main(argv: list[str] | None = None) -> int:
                 repo_root=repo_root,
                 triage_path=Path(args.triage),
                 feedback_path=Path(args.feedback),
+                audit_log_path=Path(args.audit_log),
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "autopatch-plan":
+            result_path = plan_autopatches(
+                repo_root=repo_root,
+                learning_path=Path(args.learning),
                 audit_log_path=Path(args.audit_log),
             )
             _print({"result_path": str(result_path)})
