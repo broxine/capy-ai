@@ -44,6 +44,11 @@ Phase 6 adds triage + disclosure drafting:
 - severity scoring across candidate clusters
 - disclosure draft generation for review-ready issues
 
+Phase 7 adds the learning loop:
+- feedback template generation from triaged findings
+- outcome ingestion for confirmed / false-positive / weak-signal verdicts
+- skill and taxonomy recommendations derived from historical outcomes
+
 ## Quickstart
 
 ```bash
@@ -71,6 +76,8 @@ python -m bughunter_hive.cli browser-validate --run audit/validation-runs/exampl
 python -m bughunter_hive.cli browser-review --run audit/browser-validation-runs/example-hybrid-program-phase4-browser-validation.json
 python -m bughunter_hive.cli triage --review audit/review-candidates/example-hybrid-program-phase5-review.json
 python -m bughunter_hive.cli draft-disclosures --triage audit/triage/example-hybrid-program-phase6-triage.json
+python -m bughunter_hive.cli feedback-template --triage audit/triage/example-hybrid-program-phase6-triage.json
+python -m bughunter_hive.cli learn --triage audit/triage/example-hybrid-program-phase6-triage.json --feedback audit/feedback-templates/example-hybrid-program-phase7-feedback-template.json
 pytest
 ```
 
@@ -110,3 +117,5 @@ pytest
 - `browser-review` — review browser artifacts and emit finding candidates
 - `triage` — rank and deduplicate browser review candidates
 - `draft-disclosures` — generate disclosure drafts from triaged findings
+- `feedback-template` — generate verdict template from triaged findings
+- `learn` — ingest outcomes and emit learning recommendations

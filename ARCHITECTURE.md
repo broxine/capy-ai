@@ -18,6 +18,8 @@ Acceptance target for Phase 5: review the browser evidence itself and turn it in
 
 Acceptance target for Phase 6: triage those candidates into ranked findings, deduplicate overlaps, and emit disclosure drafts that are close to operator-ready.
 
+Acceptance target for Phase 7: close the loop by recording outcomes and translating them into recommendations that affect future skills and prioritization.
+
 ## Org chart
 
 ```text
@@ -185,3 +187,11 @@ It is intentionally passive and produces signals, not destructive actions.
 - evidence references
 - safe reproduction outline
 - impact hypothesis
+
+## Phase 7 shipped component
+
+`bughunter_hive.learning` adds feedback-driven adaptation:
+- verdict templates for operators
+- outcome ledger in the knowledge layer
+- cluster stats over time
+- skill and taxonomy recommendations from historical performance

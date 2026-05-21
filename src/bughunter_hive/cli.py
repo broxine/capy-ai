@@ -11,6 +11,7 @@ from .browser_validator import run_browser_validation
 from .disclosure import generate_disclosure_drafts
 from .killswitch import KillSwitch, KillSwitchEngaged
 from .knowledge import register_source
+from .learning import create_feedback_template, run_learning_loop
 from .orchestrator import run_orchestrator_from_manifest
 from .planning import build_campaign_plan
 from .programs import load_program_profile, write_program_profile
@@ -112,6 +113,14 @@ def build_parser() -> argparse.ArgumentParser:
     disclosure.add_argument("--triage", required=True)
     disclosure.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
     disclosure.add_argument("--max-drafts", type=int, default=5)
+
+    feedback = sub.add_parser("feedback-template", help="generate a feedback template from triage output")
+    feedback.add_argument("--triage", required=True)
+
+    learn = sub.add_parser("learn", help="ingest outcomes and generate learning recommendations")
+    learn.add_argument("--triage", required=True)
+    learn.add_argument("--feedback", required=True)
+    learn.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -276,6 +285,24 @@ def main(argv: list[str] | None = None) -> int:
                 triage_path=Path(args.triage),
                 audit_log_path=Path(args.audit_log),
                 max_drafts=args.max_drafts,
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "feedback-template":
+            result_path = create_feedback_template(
+                repo_root=repo_root,
+                triage_path=Path(args.triage),
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "learn":
+            result_path = run_learning_loop(
+                repo_root=repo_root,
+                triage_path=Path(args.triage),
+                feedback_path=Path(args.feedback),
+                audit_log_path=Path(args.audit_log),
             )
             _print({"result_path": str(result_path)})
             return 0
