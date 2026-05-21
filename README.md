@@ -34,6 +34,11 @@ Phase 4 adds browser-backed validation:
 - DOM dump artifacts for real page review
 - browser observation bundle layered on top of Phase 3 execution
 
+Phase 5 adds browser artifact review:
+- finding candidate generation from screenshots + DOM dumps
+- mapping of login forms, callback params, DOM sinks, and wallet/signature cues
+- review bundle ready for human triage or later agent ranking
+
 ## Quickstart
 
 ```bash
@@ -58,6 +63,7 @@ python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.jso
 python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-program-phase2-run.json
 python -m bughunter_hive.cli validate-run --bundle audit/validation/example-hybrid-program-phase2-validation.json
 python -m bughunter_hive.cli browser-validate --run audit/validation-runs/example-hybrid-program-phase3-validation-run.json
+python -m bughunter_hive.cli browser-review --run audit/browser-validation-runs/example-hybrid-program-phase4-browser-validation.json
 pytest
 ```
 
@@ -94,3 +100,4 @@ pytest
 - `validate-plan` — convert a Phase 2 run bundle into safe validation tasks
 - `validate-run` — execute a safe validation bundle and emit artifacts
 - `browser-validate` — capture screenshot and DOM artifacts from a Phase 3 run
+- `browser-review` — review browser artifacts and emit finding candidates

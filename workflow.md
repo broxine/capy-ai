@@ -73,6 +73,7 @@ python -m bughunter_hive.cli orchestrate --manifest examples/phase2-manifest.jso
 python -m bughunter_hive.cli validate-plan --run audit/runs/example-hybrid-program-phase2-run.json
 python -m bughunter_hive.cli validate-run --bundle audit/validation/example-hybrid-program-phase2-validation.json
 python -m bughunter_hive.cli browser-validate --run audit/validation-runs/example-hybrid-program-phase3-validation-run.json
+python -m bughunter_hive.cli browser-review --run audit/browser-validation-runs/example-hybrid-program-phase4-browser-validation.json
 ```
 
 The manifest-driven run is still constrained to safe operations. It composes the same internal modules used in Phase 1, then writes a run bundle into `audit/runs/` and a markdown handoff page into `knowledge/wiki/playbooks/`.
@@ -82,3 +83,5 @@ The validation bundle turns the Phase 2 run into the next Execution queue withou
 The validator runner is the first execution loop that consumes that queue. It remains read-only and artifact-first: request traces, notes, and summaries before any human considers stronger validation.
 
 The browser validator is the visual lane on top of that: it captures screenshot and DOM evidence, still read-only, so reviewers can inspect actual rendered surfaces before approving anything stronger.
+
+The browser reviewer then converts those visual/DOM artifacts into sharper candidate findings and next-safe-step guidance for triage.

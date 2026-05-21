@@ -14,6 +14,8 @@ Acceptance target for Phase 3: execute the safe validation bundle itself, produc
 
 Acceptance target for Phase 4: add browser-native evidence capture to the validation lane so Execution can review real screenshots and DOM artifacts before any stronger testing.
 
+Acceptance target for Phase 5: review the browser evidence itself and turn it into concrete finding candidates with next-safe-step guidance.
+
 ## Org chart
 
 ```text
@@ -160,3 +162,11 @@ It is intentionally passive and produces signals, not destructive actions.
 - dumped DOM snapshots
 - browser-derived observations for login/forms/scripts keywords
 - machine-readable browser validation bundle plus markdown playbook
+
+## Phase 5 shipped component
+
+`bughunter_hive.browser_review` analyzes the Phase 4 bundle and emits candidate findings:
+- login surface candidates
+- callback parameter candidates
+- DOM sink / postMessage candidates
+- wallet/signature candidates

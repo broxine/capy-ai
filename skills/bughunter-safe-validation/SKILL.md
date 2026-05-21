@@ -20,3 +20,8 @@ Phase 4 helper:
 ```bash
 python -m bughunter_hive.cli browser-validate --run audit/validation-runs/<program>-phase3-validation-run.json
 ```
+
+Phase 5 helper:
+```bash
+python -m bughunter_hive.cli browser-review --run audit/browser-validation-runs/<program>-phase4-browser-validation.json
+```

@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from .bootstrap import install_repo_skills
+from .browser_review import review_browser_validation
 from .browser_validator import run_browser_validation
 from .killswitch import KillSwitch, KillSwitchEngaged
 from .knowledge import register_source
@@ -96,6 +97,10 @@ def build_parser() -> argparse.ArgumentParser:
     browser_validate.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
     browser_validate.add_argument("--kill-switch", default=str(_repo_root() / "runtime" / "kill-switch.flag"))
     browser_validate.add_argument("--timeout", type=int, default=15)
+
+    browser_review = sub.add_parser("browser-review", help="review browser artifacts and generate finding candidates")
+    browser_review.add_argument("--run", required=True)
+    browser_review.add_argument("--audit-log", default=str(_repo_root() / "audit" / "events.jsonl"))
 
     bootstrap = sub.add_parser("bootstrap", help="copy repo skills into Hermes home")
     bootstrap.add_argument("--hermes-home", default=str(Path.home() / ".hermes"))
@@ -232,6 +237,15 @@ def main(argv: list[str] | None = None) -> int:
                 audit_log_path=Path(args.audit_log),
                 kill_switch_path=Path(args.kill_switch),
                 timeout=args.timeout,
+            )
+            _print({"result_path": str(result_path)})
+            return 0
+
+        if args.command == "browser-review":
+            result_path = review_browser_validation(
+                repo_root=repo_root,
+                browser_validation_path=Path(args.run),
+                audit_log_path=Path(args.audit_log),
             )
             _print({"result_path": str(result_path)})
             return 0
